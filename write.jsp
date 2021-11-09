@@ -27,11 +27,12 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="main.jsp">hs드립넷</a>
+				<a class="navbar-brand" href="main.jsp">JSP 게시판 웹 사이트</a>
 		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 			<ul class="nav navbar-nav">
-				<li class="active"><a href="main.jsp">메인</a></li>
-				<li><a href="bbs.jsp">게시판</a></li>
+				<li><a href="main.jsp">메인</a></li>
+				<!-- 현재 페이지는 게시판이다: active -->
+				<li class="active"><a href="bbs.jsp">게시판</a></li>
 			</ul>
 			<%
 				if(userID == null) {
@@ -70,43 +71,29 @@
 		</div>
 	</nav>
 	<div class="container">
-		<div class="jumbotron">
-			<div class="container">
-				<h1>khs 유우머 게시판</h1>
-				<p>이 사이트는 본인이 만든 유우머게시판 입니다.</p>
-				<a class="btn btn-primary btn-pull" href="http://goodsosbva.dothome.co.kr/" role="button">현성`s 소개 사이트로 가보기</a>
-			</div>
-		</div>
-	</div>
-	<div class="container">
-		<div id="myCarousel" class="carousel slide" data-ride="carousel">
-			<ol class="carousel-indicators">
-				<li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-				<li data-target="#myCarousel" data-slide-to="1"></li>
-				<li data-target="#myCarousel" data-slide-to="2"></li>
+		<div class="row">
+			<form method="post" action="writeAction.jsp">
+				<table class="table table-striped" style="text-align: center; border: 1px solid $ddddd">
+					<thead>
+				 		<tr>
+				 			<th colspan="2" style="background-clolr: #eeeeee; text-align: center;">게시판 글쓰기 양식</th>
+				 		</tr>
+				 	</thead>
+				 	<tbody>
+				 		<tr>
+				 			<td><input type="text" class="form-control" placeholder="글 제목" name="bbsTitle" maxlength="50"></td>
+				 		</tr>
+				 		<tr>
+				 			<td><textarea class="form-control" placeholder="글 내용" name="bbsContent" maxlength="2048" style="height: 350px;"></textarea></td>
+				 		</tr>
+				 	</tbody>
 				
-			</ol>
-			<!-- 실질적으로 이미지가 들어갈 수 있는 부분 -->
-			<div class="carousel-inner">
-				<div class="item active">
-					<img src="images/1.jpg">
-				</div>
-				<div class="item">
-					<img src="images/2.jpg">
-				</div>
-				<div class="item">
-					<img src="images/3.jpg">
-				</div>
-			</div>
-			<a class="left carousel-control" href=#myCarousel" data-slide="prev">
-				<span class="glyphicon glyphicon-chevron-left"></span>
-			</a>
-			<a class="right carousel-control" href=#myCarousel" data-slide="next">
-				<span class="glyphicon glyphicon-chevron-right"></span>
-			</a>
+				</table>
+				<!-- 글쓰기 버튼 만들어주기 -->
+				<input type="submit" class="btn btn-primary pull-right" value="글쓰기">
+			</form>
 		</div>
 	</div>
-	
 	<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 	<script src="js/bootstrap.js"></script>
 </body>

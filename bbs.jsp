@@ -1,6 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import="java.io.PrintWriter" %>
+<%@ page import="bbs.BbsDAO" %>
+<%@ page import="bbs.Bbs" %>
+<%@ page import="java.util.ArrayList" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,12 +11,32 @@
 <meta name='viewport' content="width=device-width", initial-scale="1">
 <link rel="stylesheet" href="css/bootstrap.css">
 <title>JSP 게시판 웹 사이트</title>
+<style type="text/css">
+	a, a:hover, a:focus { animation-duration: 3s; animation-name: rainbowLink; animation-iteration-count: infinite; } 
+	@keyframes rainbowLink {     
+ 	0% { color: #ff2a2a; }
+ 	15% { color: #ff7a2a; }
+ 	30% { color: #ffc52a; }
+ 	45% { color: #43ff2a; }
+ 	60% { color: #2a89ff; }
+ 	75% { color: #202082; }
+ 	90% { color: #6b2aff; } 
+ 	100% { color: #e82aff; }
+	}
+</style>
 </head>
 <body>
 	<%
 		String userID = null;
 		if (session.getAttribute("userID") != null) {
 			userID = (String) session.getAttribute("userID");
+		}
+		// 게시판이 몇 번째 페이지인지 보여주기 위해
+		int pageNumber = 1;
+		// 페이지넘버 파라미터가 넘어 왔다면
+		if (request.getParameter("pageNumber") != null) {
+			// 파라미터는 정수형으로 바꿔주어야 한다
+			pageNumber = Integer.parseInt(request.getParameter("pageNumber"));
 		}
 	%>
 		<nav class="navbar navbar-default">
@@ -83,14 +106,43 @@
 				 	</tr>
 				 </thead>
 				 <tbody>
+				 	<!-- 게시글 출력이 되야하는 부분 -->
+				 	<%
+				 		BbsDAO bbsDAO = new BbsDAO();
+				 		ArrayList<Bbs> list = bbsDAO.getList(pageNumber);
+				 		for(int i = 0; i < list.size(); i++) {
+				 	%>
 				 	<tr>
-				 		<td>1</td>
-				 		<td>ㅎㅇ</td>
-				 		<td>권현성</td>
-				 		<td>2021-10-29</td>
+				 		<td><%= list.get(i).getBbsID() %></td>
+				 		<!-- 클릭하면 이동하게끔 a태그를 이용 --> 
+				 		<td><a href="view.jsp?bbsID=<%= list.get(i).getBbsID() %>">
+				 			<%= list.get(i).getBbsTitle().replaceAll(" ", "&nbsp;").replaceAll("<", "&lt;")
+				 				.replaceAll(">", "&gt;").replaceAll("\n", "<br>") %></a></td>
+				 		<td><%= list.get(i).getUserID() %></td>
+				 		<td><%= list.get(i).getBbsDate().substring(0, 11) + list.get(i).getBbsDate().substring(11, 13) + "시" + list.get(i).getBbsDate().substring(14, 16) + "분" %></td>
 				 	</tr>
+				 	<% 
+				 		}
+				 	%>
+				 	
 				 </tbody>
 			</table>
+			<%	
+				// 페이지가 2 개이상이라면
+				if(pageNumber != 1) {
+					
+			%>	
+				<!-- 페이지 넘버가 -1를 해서 이전 페이지로 -->
+				<a href="bbs.jsp?pageNumber=<%=pageNumber - 1%>" class="btn btn-success brn-array-left">이전</a>
+			<%	
+				// 다음 페이지가 있다면
+				} if(bbsDAO.nextPage(pageNumber + 1)) {
+			
+			%>
+				<a href="bbs.jsp?pageNumber=<%=pageNumber + 1%>" class="btn btn-success brn-array-left">다음</a>
+			<%
+				}
+			%>
 			<a href="write.jsp" class="btn btn-primary pull-right">글쓰기</a>
 		</div>
 	</div>
